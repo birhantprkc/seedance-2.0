@@ -271,10 +271,13 @@ https://github.com/Emily2040/seedance-2.0
 
 For manual installation, copy this repository into the skill directory used by your agent client. The directory name should match the root skill name, `seedance-20`. Treat the table below as common local targets to verify in your own client, not a universal support guarantee.
 
-| Platform | Typical workspace path |
+| Platform | Typical install target (verify in your client) |
 |---|---|
-| Claude Code / OpenClaw | `.claude/skills/seedance-20/` |
-| Codex-style agent workspace | `.agents/skills/seedance-20/` |
+| Claude Code | `.claude/skills/seedance-20/` |
+| Codex | `.agents/skills/seedance-20/` or `~/.codex/skills/seedance-20/` via `scripts/install_codex_skill.py` |
+| Google Antigravity | `.agents/skills/seedance-20/` (workspace) or `~/.gemini/antigravity-cli/skills/seedance-20/` (global) |
+| OpenClaw | workspace `skills/seedance-20/` or `~/.openclaw/skills/seedance-20/` via `openclaw skills install` (ClawHub-compatible; skills already carry `openclaw:` metadata) |
+| Hermes Agent | project `skills/seedance-20/` or `~/.hermes/skills/seedance-20/` via `hermes skills install` |
 | Gemini CLI-style workspace | `.gemini/skills/seedance-20/` |
 | GitHub Copilot workspace | `.github/skills/seedance-20/` |
 | Cursor workspace | `.cursor/skills/seedance-20/` |
