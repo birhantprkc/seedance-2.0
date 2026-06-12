@@ -9,7 +9,7 @@ tags:
   - seedance-20
 metadata:
   version: "5.4.7"
-  updated: "2026-06-11"
+  updated: "2026-06-12"
   parent: "seedance-20"
   author: "Iamemily2050 (@iamemily2050)"
   repository: "https://github.com/Emily2040/seedance-2.0"
@@ -44,6 +44,10 @@ Load `[ref:vocab/ru]` for dense role-binding, first/last-frame, camera, lighting
 ## De-Slop Rule
 
 When the prompt leans on `кинематографичный`, `эпичный`, `атмосферный`, `потрясающий`, or `высокое качество`, load the Slop Traps table in `references/vocab/ru.md` and decompose each into the physical elements that produce it - движение камеры, источник света, материал, звук.
+
+## Dialogue Rule
+
+For spoken Russian, load the Russian Dialogue Notes in `references/vocab/ru.md`: lines of a few words, one speaker per generation, Cyrillic first with transliteration as the field-reported fallback, and a post-dub plan for fully voiced pieces.
 
 ## Output Contract
 

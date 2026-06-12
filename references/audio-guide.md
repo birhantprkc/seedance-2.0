@@ -12,6 +12,7 @@ For professional audio post, stems, M&E, dubbing, loudness, or delivery checks, 
 - Use stable framing for lip-sync.
 - Avoid head turns, large face movement, extreme camera moves, or busy hand action while mouth accuracy matters.
 - If the line matters more than the environment, reduce music and SFX during the line.
+- Non-English dialogue: keep lines even shorter - long non-English phrases are a field-reported weak spot. For a fully voiced non-English piece, plan a post-dub instead, and check the language's vocab file for dialogue notes.
 
 ## Audio reference mapping
 

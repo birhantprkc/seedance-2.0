@@ -63,6 +63,18 @@ Use this reference for Russian Seedance prompt wording, role binding, and compac
 
 `[Image1] — референс; сохранить [персонажа/продукт/логотип] без изменений. Меняются только [движение/свет/камера]. Камера: [одно движение]. Звук: [аудио-сигнал].`
 
+## Russian Dialogue Notes
+
+Field-observed from Russian community testing (Habr, vc.ru); test per surface, never promise results. Official material lists Russian among supported dialogue languages, but long Russian phrases are a reported weak spot.
+
+| Rule | Practice |
+|---|---|
+| Короткие реплики | Split monologues into lines of a few words: `Она тихо говорит: «Я нашла его»` - long phrases drift into noise |
+| Кириллица vs транслит | The community tested pure Cyrillic, transliteration (`Ya nashla yego`), and hybrids - results vary by surface; try Cyrillic first, transliteration as the field-reported fallback when Cyrillic degrades |
+| Один говорящий | One speaker per generation for reliable lip-sync; locked medium close-up during the line |
+| Полная озвучка | A fully voiced Russian piece is not reliably achievable in-model: generate with room tone or short lines, then dub and lip-sync in post (see `audio-post-delivery.md`) |
+| Доступ из РФ | Access from Russia typically runs through third-party wrappers - treat their model names, prices, and limits as wrapper-specific, never official |
+
 ## Slop Traps
 
 Общий вывод сообщества: абстрактные оценочные слова дестабилизируют генерацию — модель не понимает, какой элемент подчеркнуть. Каждое слово-ощущение разбирается на физические элементы, которые его создают (глагол камеры + скорость + точка зрения, источник света + направление + поведение).
