@@ -26,6 +26,7 @@ REQUIRED_REFERENCES = [
     "references/api-workflow.md",
     "references/capability-map.md",
     "references/directing-engine.md",
+    "references/directing-engine-genre-library.md",
     "references/model-mechanics.md",
     "references/retake-protocol.md",
     "references/allocation-model.md",
@@ -230,6 +231,9 @@ def validate_skill(path: Path, root: Path, errors: list[str], warnings: list[str
     if metadata_value(frontmatter, "version") != EXPECTED_VERSION:
         errors.append(f"{rel}: metadata.version must be {EXPECTED_VERSION}")
 
+    if path != root / "SKILL.md" and "## Intent" not in body:
+        errors.append(f"{rel}: sub-skill missing a `## Intent` section")
+
     description = value_for(frontmatter, "description") or ""
     if not description.startswith("This skill should be used when"):
         errors.append(f"{rel}: description must use third-person activation wording")
@@ -324,6 +328,13 @@ def main() -> int:
         ]:
             if required not in yaml_text:
                 errors.append(f"agents/openai.yaml missing `{required}`")
+
+    disclosure = root / "references" / "progressive-disclosure.md"
+    if disclosure.exists():
+        disclosure_text = disclosure.read_text(encoding="utf-8")
+        for needed in ("directing-engine.md", "directing-engine-genre-library.md"):
+            if needed not in disclosure_text:
+                errors.append(f"progressive-disclosure.md must document the heavy reference {needed}")
 
     if warnings:
         print("WARNINGS:")

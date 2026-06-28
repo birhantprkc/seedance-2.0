@@ -18,7 +18,11 @@ _No unreleased changes._
 ### Changed
 
 - De-templated all 47 sequence eval cases: each now carries a concrete scenario prompt and 2-4 case-specific assertions that name the behavior its id promises, replacing the placeholder "V6 check: ..." prompts and the identical three generic assertions. The structural fields (`forbidden_behaviors`, `expected_sequence_relation`, `critical`, ...) are preserved, so `sequence_eval_check` still holds.
-- Bumped active release metadata, README badges (121 eval cases), eval/validator expectations, manifest, readiness doc, examples, and translated entry lines to v6.2.0.
+- Split the 454-line directing engine for progressive-disclosure compliance: the 33-genre worked-example library moved to `references/directing-engine-genre-library.md`, loaded on demand via the genre/examples route, so the always-on Direction step no longer pulls the whole library (the reasoning core stays ~157 lines).
+- Rewrote `references/progressive-disclosure.md` to describe the real file set, heavy-vs-cheap reference loading, the directing-engine split, the genre-content ownership map, and a freshness rule.
+- Added a `## Intent` section to `seedance-continuation`, the only sub-skill that lacked one.
+- Added three CI guards: every sub-skill must carry `## Intent`; freshness-critical platform references must stay within 30 days of `api-status.md`'s `last_verified`; and `progressive-disclosure.md` must document the directing-engine heavy references.
+- Bumped active release metadata, README badges (121 eval cases, 58 references), eval/validator expectations, manifest, readiness doc, examples, and translated entry lines to v6.2.0.
 
 ## [6.1.1] — 2026-06-28
 
