@@ -122,6 +122,12 @@ REQUIRED_IDS = {
     "beginner_fast_lane_single_clip",
     "directing_scene_coherence",
     "directorial_voice_across_sequence",
+    "directing_reveal_vs_goodbye_distinct_setup",
+    "directing_pattern_break_marks_turn",
+    "directing_performance_as_gesture",
+    "directing_subtext_through_contradiction",
+    "directing_lighting_ratio_serves_emotion",
+    "directing_refuses_unmotivated_technique",
 }
 
 

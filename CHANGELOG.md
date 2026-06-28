@@ -2,11 +2,23 @@
 
 All notable changes to this project are documented here.
 
-Current active release: **6.1.1**. Older entries below are preserved as release history, not active version guidance.
+Current active release: **6.2.0**. Older entries below are preserved as release history, not active version guidance.
 
 ## Unreleased
 
 _No unreleased changes._
+
+## [6.2.0] — 2026-06-28
+
+### Added
+
+- Added `scripts/eval_run.py`, a model-in-the-loop eval harness: it builds a responder context from the real skill content (root `SKILL.md`, the case's expected sub-skills, and any `state_fixture`), gets a response to each case prompt, then has a judge model score that response against the case's own assertions using `references/eval-rubric.md` (0-3 legacy / 0-4 sequence scales and the documented release thresholds). An offline `--self-test` wiring check runs in CI; a live scored pass is the quality gate that lives outside offline CI, recorded in `evals/eval-run-ledger.md`.
+- Added six directing-engine eval cases (reveal-vs-goodbye distinct setup, pattern-break marks the turn, performance-as-gesture, subtext-through-contradiction, lighting-ratio-serves-emotion, refuses-unmotivated-technique) so the v6.1.0 flagship has proportional coverage.
+
+### Changed
+
+- De-templated all 47 sequence eval cases: each now carries a concrete scenario prompt and 2-4 case-specific assertions that name the behavior its id promises, replacing the placeholder "V6 check: ..." prompts and the identical three generic assertions. The structural fields (`forbidden_behaviors`, `expected_sequence_relation`, `critical`, ...) are preserved, so `sequence_eval_check` still holds.
+- Bumped active release metadata, README badges (121 eval cases), eval/validator expectations, manifest, readiness doc, examples, and translated entry lines to v6.2.0.
 
 ## [6.1.1] — 2026-06-28
 

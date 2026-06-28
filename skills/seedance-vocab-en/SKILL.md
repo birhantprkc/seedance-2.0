@@ -9,7 +9,7 @@ tags:
   - anti-slop
   - seedance-20
 metadata:
-  version: "6.1.1"
+  version: "6.2.0"
   updated: "2026-06-28"
   parent: "seedance-20"
   author: "Iamemily2050 (@iamemily2050)"
