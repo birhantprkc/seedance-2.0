@@ -4,7 +4,7 @@ Use this reference when a Seedance request becomes a multi-clip project. The pro
 
 ## Operating Model
 
-User idea -> story spine -> world and continuity bible -> sequence plan -> current clip contract -> current clip prompt -> generated take -> observed take review -> canon reconciliation -> next clip contract -> next prompt.
+User idea -> story spine -> world and continuity bible -> scene plan -> sequence plan -> current clip contract -> current clip prompt -> generated take -> observed take review -> canon reconciliation -> next clip contract -> next prompt.
 
 Plan globally. Generate locally. Observe the real result. Update canon. Continue from actual accepted footage.
 
@@ -16,15 +16,29 @@ Canonical references control identity and immutable design: character identity, 
 
 Accepted previous footage controls transient opening state: pose, action phase, screen position, camera phase, environment arrangement, audio phase, open motion, and incomplete gestures.
 
+## Scene Layer
+
+A scene is the re-anchor unit: one location and time envelope whose clips may chain from each other's accepted footage. Scenes group beats and own clips; every clip carries exactly one `scene_id`.
+
+Seamless continuation is legal only inside a scene. A scene boundary is an intentional cut: the next clip opens from canonical references, not from prior output, and `extension_depth` resets to 0.
+
+`extension_depth` counts consecutive output-sourced generations since the last canonical re-anchor. It resets to 0 whenever a clip opens from canonical references. It may not exceed the scene's `max_chain_depth` (default 2, hard ceiling 3): a clip that would exceed it must open from canonical references instead. Schedule these re-anchors in the plan; do not wait for visible drift.
+
+Map the arc to scenes, not clips: each scene carries one `arc_position` (open, rising, turn, climax, or release) and its clips inherit it.
+
+Audio plan: clips carry ambience, sync SFX, and on-camera dialogue only. Unify music and score in post, because audio is not continuous across separate generations. Do not ask each clip for score.
+
 ## Required Project Fields
 
-At minimum, a project state contains `schema_version`, `state_revision`, `project_id`, `project_mode`, `surface`, `clip_budget_sec`, `prompt_budget`, `story`, `world_bible`, `reference_registry`, `beats`, `clips`, `take_history`, `current_clip_id`, `canon_revision`, and `updated_at`.
+At minimum, a project state contains `schema_version`, `state_revision`, `project_id`, `project_mode`, `surface`, `clip_budget_sec`, `prompt_budget`, `story`, `world_bible`, `reference_registry`, `scenes`, `beats`, `clips`, `take_history`, `current_clip_id`, `canon_revision`, and `updated_at`.
 
 Story fields: `logline`, `story_promise`, `objective`, `initial_condition`, `final_outcome`, `target_duration_sec`, `tone`, and `medium`.
 
+Scene fields: `scene_id`, `scene_index`, `narrative_function`, `arc_position`, `location`, `time_of_day`, `anchor_source`, `max_chain_depth`, `audio_plan`, `assigned_clip_ids`, `transition_out`, and `status`.
+
 Beat fields: `beat_id`, `description`, `narrative_function`, `status`, `assigned_clip_id`, and `dependencies`.
 
-Clip lineage fields: `clip_id`, `parent_clip_id`, `sequence_index`, `prompt_version`, `generation_mode`, `source_clip_tag`, `status`, `narrative_job`, `already_happened`, `this_clip_only`, `reserved_for_later`, `planned_start_state`, `planned_end_state`, `observed_start_state`, `observed_end_state`, `continuity_locks`, `allowed_changes`, `continuity_breaks`, `accepted_deviations`, `transition_in`, `transition_out`, `open_motion_vectors`, `handoff_requirements`, and `extension_depth`.
+Clip lineage fields: `clip_id`, `parent_clip_id`, `scene_id`, `sequence_index`, `prompt_version`, `generation_mode`, `source_clip_tag`, `status`, `narrative_job`, `already_happened`, `this_clip_only`, `reserved_for_later`, `planned_start_state`, `planned_end_state`, `observed_start_state`, `observed_end_state`, `continuity_locks`, `allowed_changes`, `continuity_breaks`, `accepted_deviations`, `transition_in`, `transition_out`, `open_motion_vectors`, `handoff_requirements`, and `extension_depth`.
 
 ## Visual State
 
@@ -72,6 +86,8 @@ SURFACE:
 REFERENCE TAGS:
 CANONICAL REFERENCES:
 ACCEPTED CLIPS:
+SCENE MAP:
+CURRENT SCENE:
 CURRENT ACTUAL STATE:
 OPEN MOTION:
 COMPLETED BEATS:

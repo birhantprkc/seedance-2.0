@@ -8,6 +8,7 @@ Do not write a continuation prompt until these are known:
 
 - project ID and current clip ID;
 - parent clip ID;
+- `scene_id`, and whether this continuation stays inside the scene or crosses a scene boundary;
 - accepted source clip or accepted final frame;
 - observed end state;
 - completed beats;
@@ -37,6 +38,8 @@ Record:
 ## Seamless Versus Next Shot
 
 Use `seamless_continuation` only when the next generation continues the same shot, geography, and open motion from accepted footage.
+
+A scene boundary defaults to `intentional_next_shot`: open from canonical references and reset `extension_depth` to 0. Do not promise seamless continuation across a scene boundary.
 
 Use `intentional_next_shot` when an editorial cut is appropriate. It may preserve story continuity, but it does not promise exact frame continuity.
 

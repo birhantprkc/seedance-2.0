@@ -1,6 +1,6 @@
 {
-  "version": "6.3.0",
-  "updated": "2026-06-29",
+  "version": "6.4.0",
+  "updated": "2026-07-04",
   "cases": [
     {
       "id": "vague_idea_interview",
@@ -2729,6 +2729,22 @@
       "failure_mode": "promising reliable synthesized non-English voiced dialogue, or suggesting cloning a real or celebrity voice",
       "skills_expected_to_activate": [
         "seedance-audio"
+      ]
+    },
+    {
+      "id": "scene_layer_caps_extension_chain",
+      "prompt": "I want a 5-minute short film of a courier's night across the city. Just keep extending each clip from the last one until we hit five minutes - that keeps it seamless, right?",
+      "expected_output": "Plans scenes before clips: groups the story into scenes with canonical anchors, caps consecutive output-sourced chaining at the scene's max_chain_depth (default 2), schedules re-anchors from original references at scene boundaries, and explains that cuts are the cheapest continuity tool - not one long extension chain.",
+      "assertions": [
+        "refuses the single long extension chain and plans scenes of roughly two to five clips instead",
+        "caps consecutive output-sourced generations at the scene's max_chain_depth and schedules re-anchors from canonical references",
+        "explains that a scene boundary is an intentional cut opening from canonical references, resetting extension_depth",
+        "keeps music/score unified in post rather than asking every clip for score"
+      ],
+      "failure_mode": "accepting an unbounded extend chain for a five-minute story, guaranteeing identity drift the docs themselves predict",
+      "skills_expected_to_activate": [
+        "seedance-sequence",
+        "seedance-continuation"
       ]
     }
   ]

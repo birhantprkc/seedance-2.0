@@ -2,6 +2,7 @@
   "project_id": "seq_airport_arrival",
   "clip_id": "clip_01",
   "parent_clip_id": null,
+  "scene_id": "scene_01",
   "sequence_index": 1,
   "narrative_job": "Exit terminal and approach the open rear car door.",
   "target_duration_sec": null,

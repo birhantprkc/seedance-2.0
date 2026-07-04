@@ -9,8 +9,8 @@ tags:
   - continuity
   - seedance-20
 metadata:
-  version: "6.3.0"
-  updated: "2026-06-29"
+  version: "6.4.0"
+  updated: "2026-07-04"
   parent: "seedance-20"
   author: "Iamemily2050 (@iamemily2050)"
   repository: "https://github.com/Emily2040/seedance-2.0"
@@ -36,6 +36,7 @@ Before writing any continuation prompt, require:
 - `project_id`;
 - current `clip_id`;
 - valid `parent_clip_id`;
+- `scene_id`, and whether the next clip stays inside the scene or crosses a scene boundary;
 - full-story objective;
 - final story outcome;
 - next planned narrative job;
@@ -62,13 +63,17 @@ Do not hide this uncertainty by writing a speculative prompt.
 
 `reanchor_after_drift`: identity, detail, geography, motion, audio, or world continuity degraded. Return to canonical identity, the strongest accepted final frame, a stable source clip, or a new intentional shot using canonical references.
 
+## Scene Boundary Rule
+
+Crossing a scene boundary defaults to `intentional_next_shot` opening from canonical references. Do not promise `seamless_continuation` across a scene boundary; if the user explicitly asks for one, record the reason and treat the result as high drift risk.
+
 ## Canon Rule
 
 Accepted observed footage overrides planned state. If the plan says the subject reached the car door but the accepted clip ends two steps away, the next prompt begins two steps away. It does not replay the terminal exit, and it does not assume the subject is inside the car.
 
 Rejected footage never updates canon and never becomes a parent source.
 
-Track `extension_depth`. At depth 2 or greater, warn that repeated extension can increase continuity risk. When visible drift has begun, recommend re-anchoring instead of blindly extending again.
+Track `extension_depth` as consecutive output-sourced generations since the last canonical re-anchor; it resets to 0 when a clip opens from canonical references. At the scene's `max_chain_depth` (default 2, hard ceiling 3), re-anchor by schedule instead of extending again. Visible drift before the cap is an immediate `reanchor_after_drift`.
 
 ## Output Contract
 

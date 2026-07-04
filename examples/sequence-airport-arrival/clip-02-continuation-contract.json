@@ -2,6 +2,7 @@
   "project_id": "seq_airport_arrival",
   "clip_id": "clip_02",
   "parent_clip_id": "clip_01",
+  "scene_id": "scene_01",
   "sequence_index": 2,
   "narrative_job": "Complete the final two steps, enter the car, and close the rear door.",
   "target_duration_sec": null,

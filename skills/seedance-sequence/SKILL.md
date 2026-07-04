@@ -9,8 +9,8 @@ tags:
   - prompt-compiler
   - seedance-20
 metadata:
-  version: "6.3.0"
-  updated: "2026-06-29"
+  version: "6.4.0"
+  updated: "2026-07-04"
   parent: "seedance-20"
   author: "Iamemily2050 (@iamemily2050)"
   repository: "https://github.com/Emily2040/seedance-2.0"
@@ -43,23 +43,36 @@ For every request also classify:
 
 If the surface is unknown, use a conservative generic profile. Do not invent a duration, prompt limit, reference count, or tag syntax.
 
+## Scene Architecture
+
+Plan scenes before clips. A scene is the re-anchor unit: one location and time envelope whose clips may chain from each other's accepted footage.
+
+- Seamless continuation is legal only inside a scene. A scene boundary is an intentional cut that opens from canonical references and resets `extension_depth` to 0.
+- Cap consecutive output-sourced generations at the scene's `max_chain_depth` (default 2, hard ceiling 3). Schedule re-anchors in the plan; identity decays with chained generations, so a scheduled reset is routine and a drift repair is expensive.
+- Map the arc to scenes: each scene carries one `arc_position` and its clips inherit it.
+- Cuts are the cheapest continuity tool. The audience expects frame continuity only inside a chained shot, not across an editorial cut. A five-minute story usually resolves to several scenes of two to five clips, not one long extension chain.
+- Audio: clips carry ambience, sync SFX, and on-camera dialogue; unify music and score in post because audio is not continuous across separate generations.
+
 ## Build Process
 
 1. Establish the story promise and final outcome before Clip 01.
 2. Identify the character, product, or narrative objective, and with `[ref:directing-engine]` set one directorial voice for the whole project and plan the long-form spine - how shot scale, camera movement, light contrast, and sound should progress from open to climax to release, and which single clip breaks the pattern to mark the turn.
 3. Extract ordered beats and assign each beat a status: planned, current, completed, omitted, or replaced.
-4. Divide beats into generation-sized clips using the active surface budget or conservative assumption.
-5. Give every clip one narrative job and one completed endpoint.
-6. Define planned opening state, planned ending state, continuity locks, allowed changes, and extension-friendly handoff requirements.
-7. Store later clips as provisional intent cards, not final prompts.
-8. Compile only the first unresolved clip prompt from the current clip contract.
-9. After generation, require the clip or final frame, record observed start/end state, reconcile canon, and only then compile the next prompt.
+4. Group beats into scenes: assign each scene one location and time envelope, one `arc_position`, canonical `anchor_source` references, `max_chain_depth` (default 2), and an audio plan.
+5. Divide each scene into generation-sized clips using the active surface budget or conservative assumption; chain clips from accepted footage only inside a scene, and open every scene from canonical references.
+6. Give every clip one narrative job and one completed endpoint.
+7. Define planned opening state, planned ending state, continuity locks, allowed changes, and extension-friendly handoff requirements.
+8. Store later clips as provisional intent cards, not final prompts.
+9. Compile only the first unresolved clip prompt from the current clip contract.
+10. After generation, require the clip or final frame, record observed start/end state, reconcile canon, and only then compile the next prompt.
 
 Use beginner-friendly language. It is valid to say: "This idea needs three connected generations. I will plan the complete story now, but finalize one prompt at a time so each new prompt matches what Seedance actually produced."
 
 ## Sequence Map Fields
 
-Each clip card must include `clip_id`, `sequence_index`, `parent_clip_id`, `narrative_job`, `target_duration_sec`, `generation_mode`, `shot_structure`, `already_happened`, `this_clip_only`, `reserved_for_later`, `planned_start_state`, `planned_end_state`, `transition_in`, `transition_out`, `continuity_locks`, `allowed_changes`, `arc_position`, and `status`. The `arc_position` (open, rising, turn, climax, or release) records where the clip sits on the directorial spine so its scale, movement, light, and sound trends inherit the project voice.
+Each clip card must include `clip_id`, `scene_id`, `sequence_index`, `parent_clip_id`, `narrative_job`, `target_duration_sec`, `generation_mode`, `shot_structure`, `already_happened`, `this_clip_only`, `reserved_for_later`, `planned_start_state`, `planned_end_state`, `transition_in`, `transition_out`, `continuity_locks`, `allowed_changes`, `arc_position`, and `status`. The `arc_position` (open, rising, turn, climax, or release) is inherited from the clip's scene and records where it sits on the directorial spine so its scale, movement, light, and sound trends inherit the project voice.
+
+Each scene card must include `scene_id`, `scene_index`, `narrative_function`, `arc_position`, `location`, `time_of_day`, `anchor_source`, `max_chain_depth`, `audio_plan`, `assigned_clip_ids`, `transition_out`, and `status`.
 
 Clip 01 can plan "exit terminal and reach open car door" with the endpoint "subject beside the open rear door" while reserving "entering the car" and "vehicle departure" for later clips. Do not paste all planned clips into one generation prompt.
 
@@ -71,7 +84,7 @@ For a new sequence, return:
 2. Story spine.
 3. Final outcome.
 4. World and continuity bible, including the chosen directorial voice and the long-form look spine (how scale, movement, light, and sound progress, and which clip breaks the pattern).
-5. Sequence map.
+5. Scene map and sequence map.
 6. Clip 01 contract.
 7. Clip 01 final Seedance prompt in natural language.
 8. Provisional intent cards for future clips.

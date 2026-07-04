@@ -1,5 +1,5 @@
 {
-  "schema_version": "6.3.0",
+  "schema_version": "6.4.0",
   "state_revision": 1,
   "project_id": "seq_observed_deviation",
   "project_mode": "sequence_project",
@@ -28,6 +28,22 @@
       "tag": "[Image1]",
       "role": "courier identity",
       "preserve_exact_tag": true
+    }
+  ],
+  "scenes": [
+    {
+      "scene_id": "scene_01",
+      "scene_index": 1,
+      "narrative_function": "Cross the wet rooftop and reach the service door.",
+      "arc_position": "climax",
+      "location": "wet rooftop service area",
+      "time_of_day": "night",
+      "anchor_source": ["[Image1]"],
+      "max_chain_depth": 2,
+      "audio_plan": "Clips carry rain ambience and footstep SFX; score is unified in post.",
+      "assigned_clip_ids": ["clip_01", "clip_02", "clip_03"],
+      "transition_out": "cut",
+      "status": "current"
     }
   ],
   "beats": [
@@ -64,8 +80,9 @@
     {
       "clip_id": "clip_01",
       "parent_clip_id": null,
+      "scene_id": "scene_01",
       "sequence_index": 1,
-      "prompt_version": "6.3.0",
+      "prompt_version": "6.4.0",
       "generation_mode": "I2V",
       "source_clip_tag": null,
       "status": "ready",
@@ -113,8 +130,9 @@
     {
       "clip_id": "clip_02",
       "parent_clip_id": "clip_01",
+      "scene_id": "scene_01",
       "sequence_index": 2,
-      "prompt_version": "6.3.0",
+      "prompt_version": "6.4.0",
       "generation_mode": "V2V",
       "source_clip_tag": "[Video1]",
       "status": "planned",
@@ -168,8 +186,9 @@
     {
       "clip_id": "clip_03",
       "parent_clip_id": "clip_02",
+      "scene_id": "scene_01",
       "sequence_index": 3,
-      "prompt_version": "6.3.0",
+      "prompt_version": "6.4.0",
       "generation_mode": "V2V",
       "source_clip_tag": "[Video2]",
       "status": "planned",

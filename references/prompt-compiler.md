@@ -17,16 +17,24 @@ The compiler turns internal project state into one natural-language Seedance pro
 
 1. Lineage: name `project_id`, `clip_id`, and parent only in the user-facing contract or capsule, not necessarily in the final prompt if it wastes prompt budget.
 2. Source role: identify the active reference tags and what each controls.
-3. Actual opening state: use observed footage for continuations and planned state only for first clips.
+3. Actual opening state: use observed footage for continuations and planned state only for first clips. When the source clip or final frame is attached as a reference, name it by tag and state only what the source cannot carry.
 4. Current clip action: one narrative job with an endpoint.
 5. Camera and motion phase: include inherited vectors when continuity matters.
 6. Light, environment, style, and audio: include only state-critical or mood-critical clauses.
 7. Exclusions: completed beats and reserved future beats.
 8. Endpoint: the completed state this clip must reach.
 
+## Source-Carries-State Rule
+
+When an accepted source is attached as a reference, the source carries the state and the text carries the delta. Do not re-describe in prose what the attached source already shows: prose restatement spends budget on information the model already has, and where the words disagree with the pixels, the prose becomes a drift instruction.
+
+- Accepted clip attached as a video reference: the clip carries static and dynamic state. Text carries the source role by exact tag, the current action and endpoint, exclusions, and only the continuity locks at known drift risk.
+- Accepted final frame attached as an image reference: the frame carries static state only. Text must still carry what a still cannot show - open motion vectors, camera movement phase, and audio phase - then the current action, endpoint, and exclusions.
+- No visual source attached: write the observed opening state in prose, as for a cross-session continuation where the footage is unavailable.
+
 ## Natural-Language Prompt Rules
 
-Do not emit internal JSON to Seedance. Do not include all future clips. Do not describe a planned ending as if it happened. Do not replay completed actions. Do not perform reserved later actions. Do not invent deterministic guarantees.
+Do not emit internal JSON to Seedance. Do not include all future clips. Do not describe a planned ending as if it happened. Do not replay completed actions. Do not perform reserved later actions. Do not invent deterministic guarantees. Do not re-describe content an attached source reference already shows.
 
 Use clip-scope language:
 
@@ -41,7 +49,7 @@ Use clip-scope language:
 When the prompt must shrink, preserve in this order:
 
 1. Exact reference tags and role boundaries.
-2. Actual opening state.
+2. Actual opening state the attached source cannot carry.
 3. Current action and endpoint.
 4. Continuity locks.
 5. Completed beat exclusions.
@@ -49,4 +57,4 @@ When the prompt must shrink, preserve in this order:
 7. Camera or open motion vector.
 8. Audio phase.
 
-Delete generic style boosters, duplicate adjectives, future story summary, background visible in references, secondary actions, and speculative internal notes first.
+Delete generic style boosters, duplicate adjectives, future story summary, background visible in references, secondary actions, and speculative internal notes first. When a visual source is attached, opening-state prose that repeats the source is deleted before anything else on this list.

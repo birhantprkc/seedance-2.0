@@ -14,6 +14,7 @@
     "story",
     "world_bible",
     "reference_registry",
+    "scenes",
     "beats",
     "clips",
     "take_history",
@@ -32,6 +33,7 @@
     "story": {"$ref": "#/$defs/story"},
     "world_bible": {"type": "object"},
     "reference_registry": {"type": "array", "items": {"$ref": "#/$defs/reference"}},
+    "scenes": {"type": "array", "items": {"$ref": "#/$defs/scene"}},
     "beats": {"type": "array", "items": {"$ref": "#/$defs/beat"}},
     "clips": {"type": "array", "items": {"$ref": "#/$defs/clip"}},
     "take_history": {"type": "array"},
@@ -63,6 +65,24 @@
         "preserve_exact_tag": {"const": true}
       }
     },
+    "scene": {
+      "type": "object",
+      "required": ["scene_id", "scene_index", "narrative_function", "arc_position", "location", "time_of_day", "anchor_source", "max_chain_depth", "audio_plan", "assigned_clip_ids", "transition_out", "status"],
+      "properties": {
+        "scene_id": {"type": "string"},
+        "scene_index": {"type": "integer", "minimum": 1},
+        "narrative_function": {"type": "string"},
+        "arc_position": {"enum": ["open", "rising", "turn", "climax", "release"]},
+        "location": {"type": "string"},
+        "time_of_day": {"type": "string"},
+        "anchor_source": {"type": "array", "items": {"type": "string"}},
+        "max_chain_depth": {"type": "integer", "minimum": 0, "maximum": 3},
+        "audio_plan": {"type": "string"},
+        "assigned_clip_ids": {"type": "array", "items": {"type": "string"}},
+        "transition_out": {"type": "string"},
+        "status": {"enum": ["planned", "current", "completed", "omitted", "replaced"]}
+      }
+    },
     "beat": {
       "type": "object",
       "required": ["beat_id", "description", "narrative_function", "status", "assigned_clip_id", "dependencies"],
@@ -80,6 +100,7 @@
       "required": [
         "clip_id",
         "parent_clip_id",
+        "scene_id",
         "sequence_index",
         "prompt_version",
         "generation_mode",
@@ -105,6 +126,7 @@
       "properties": {
         "clip_id": {"type": "string"},
         "parent_clip_id": {"type": ["string", "null"]},
+        "scene_id": {"type": "string"},
         "sequence_index": {"type": "integer", "minimum": 1},
         "prompt_version": {"type": "string"},
         "generation_mode": {"type": "string"},

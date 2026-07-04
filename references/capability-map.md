@@ -22,7 +22,7 @@
 
 ## Design AROUND these
 
-For connected generations, design around continuity drift by keeping each clip small, recording accepted observed state, preserving exact reference roles, and re-anchoring when extension depth or visible drift increases. This is workflow guidance, not a deterministic platform guarantee.
+For connected generations, design around continuity drift by keeping each clip small, recording accepted observed state, preserving exact reference roles, and re-anchoring on schedule at the scene's chain-depth cap instead of waiting for visible drift. This is workflow guidance, not a deterministic platform guarantee.
 
 Surface duration caps are active-surface facts, not universal Seedance facts; audio is not continuous across separate calls, so score in post when needed [official] · on-screen text → post [official] · negation summons — exclude compositionally [field] · tiny detail (distant faces, hands, logos) degrades [field] · facial micro-acting weakest — stage emotion in body/staging, ration CUs [heuristic] · visible drift after repeated chained generations — re-anchor original refs [field] · character↔prop physics fragile in multi-person shots — keep contact simple or off-screen, use the three-tier action hierarchy [field] · Fast tier behavior is surface-specific [field] · seed = stabilizer, not lock [official].
 

@@ -1,5 +1,5 @@
 {
-  "schema_version": "6.3.0",
+  "schema_version": "6.4.0",
   "state_revision": 1,
   "project_id": "standalone_watch_drop",
   "project_mode": "standalone_clip",
@@ -18,6 +18,22 @@
   },
   "world_bible": {"location": "black acrylic product table"},
   "reference_registry": [{"tag": "[Image1]", "role": "watch identity", "preserve_exact_tag": true}],
+  "scenes": [
+    {
+      "scene_id": "scene_01",
+      "scene_index": 1,
+      "narrative_function": "Hero product moment on the acrylic table.",
+      "arc_position": "climax",
+      "location": "black acrylic product table",
+      "time_of_day": "studio-lit interior",
+      "anchor_source": ["[Image1]"],
+      "max_chain_depth": 2,
+      "audio_plan": "Clip carries a single sync SFX accent; music is added in post.",
+      "assigned_clip_ids": ["clip_01"],
+      "transition_out": "none",
+      "status": "current"
+    }
+  ],
   "beats": [
     {"beat_id": "beat_light_reveal", "description": "A narrow light reveals the watch face.", "narrative_function": "product proof", "status": "current", "assigned_clip_id": "clip_01", "dependencies": []}
   ],
@@ -25,8 +41,9 @@
     {
       "clip_id": "clip_01",
       "parent_clip_id": null,
+      "scene_id": "scene_01",
       "sequence_index": 1,
-      "prompt_version": "6.3.0",
+      "prompt_version": "6.4.0",
       "generation_mode": "I2V",
       "source_clip_tag": null,
       "status": "ready",

@@ -2,11 +2,26 @@
 
 All notable changes to this project are documented here.
 
-Current active release: **6.3.0**. Older entries below are preserved as release history, not active version guidance.
+Current active release: **6.4.0**. Older entries below are preserved as release history, not active version guidance.
 
 ## Unreleased
 
 _No unreleased changes._
+
+## [6.4.0] — 2026-07-04
+
+### Added
+
+- Added a **scene layer** to the sequence architecture - the missing tier between story and clip for five-minute-scale work. A scene is the re-anchor unit: one location and time envelope whose clips may chain from each other's accepted footage. Seamless continuation is legal only inside a scene; a scene boundary is an intentional cut that opens from canonical references and resets `extension_depth` to 0. Scene cards carry `scene_id`, `arc_position` (clips inherit it), canonical `anchor_source`, `max_chain_depth` (default 2, hard ceiling 3, grounded in the model-mechanics drift note), an audio plan (ambience/SFX per clip, score unified in post), and `assigned_clip_ids`.
+- Redefined `extension_depth` as consecutive output-sourced generations since the last canonical re-anchor, resetting at every canonical open - converting re-anchoring from reactive drift repair into scheduled routine. Exceeding the scene cap is now a hard validation failure with an actionable message.
+- Added the **source-carries-state compiler rule** to `references/prompt-compiler.md`: when an accepted clip or final frame is attached as a reference, the source carries the state and the text carries only the delta (a video source carries static and dynamic state; a still frame cannot carry open motion vectors, camera phase, or audio phase, so those stay in prose). Opening-state prose that repeats an attached source is now deleted first under budget pressure.
+- Extended the JSON schemas (`project-state` and `clip-contract`), `project_state_check.py`, all four example fixtures, the Project State Capsule (SCENE MAP / CURRENT SCENE), and the root sequence invariants for the scene layer. Added eval `scene_layer_caps_extension_chain`.
+- Hardened the scene validator after adversarial review: `extension_depth` must be a non-negative integer (a string, float, negative, or boolean can no longer silently bypass the cap), booleans are rejected for `max_chain_depth`, scene `status`/`scene_index` are enum- and range-checked with duplicate-index detection, scene-clip membership is enforced bidirectionally (a clip's `scene_id` must be listed by exactly that one scene, no double assignment, no duplicate list entries), and a malformed `scenes` shape produces a clean validation error instead of a traceback. Fourteen negative probes verified.
+
+### Changed
+
+- `seedance-sequence` plans scenes before clips (Scene Architecture section, scene-first build process); `seedance-continuation` gained the Scene Boundary Rule; `continuation-handoff` and `sequence-project-state` carry the scene fields; `json-schema.md`, `agent-compatibility.md`, and `capability-map.md` enumerations aligned with the scene layer and scheduled re-anchoring.
+- Bumped active metadata, README badges (123 eval cases), eval/validator expectations, manifest, readiness, examples, and translated entries to v6.4.0.
 
 ## [6.3.0] — 2026-06-29
 

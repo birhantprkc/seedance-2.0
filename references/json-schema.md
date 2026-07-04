@@ -87,7 +87,7 @@ The JSON wrapper is for planning. The final prompt still needs to read naturally
 
 Version 6 adds machine-valid state fixtures under `schemas/`:
 
-- `project-state.schema.json` for project state, story, beats, clip lineage, take history, canon revision, and reference registry.
+- `project-state.schema.json` for project state, story, scenes, beats, clip lineage, take history, canon revision, and reference registry.
 - `clip-contract.schema.json` for the current clip production task.
 - `take-review.schema.json` for observed start/end state, accepted deviations, completed beats, and rejection/repair verdicts.
 - `prompt-spec.schema.json` for internal prompt compilation metadata.

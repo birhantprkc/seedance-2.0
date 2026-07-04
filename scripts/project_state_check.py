@@ -9,8 +9,16 @@ from pathlib import Path
 REQUIRED_PROJECT_FIELDS = {
     "schema_version", "state_revision", "project_id", "project_mode", "surface",
     "clip_budget_sec", "prompt_budget", "story", "world_bible", "reference_registry",
-    "beats", "clips", "take_history", "current_clip_id", "canon_revision", "updated_at",
+    "scenes", "beats", "clips", "take_history", "current_clip_id", "canon_revision", "updated_at",
 }
+REQUIRED_SCENE_FIELDS = {
+    "scene_id", "scene_index", "narrative_function", "arc_position", "location",
+    "time_of_day", "anchor_source", "max_chain_depth", "audio_plan",
+    "assigned_clip_ids", "transition_out", "status",
+}
+ARC_POSITIONS = {"open", "rising", "turn", "climax", "release"}
+SCENE_STATUSES = {"planned", "current", "completed", "omitted", "replaced"}
+MAX_CHAIN_DEPTH_CEILING = 3
 REQUIRED_STORY_FIELDS = {
     "logline", "story_promise", "objective", "initial_condition", "final_outcome",
     "target_duration_sec", "tone", "medium",
@@ -19,7 +27,7 @@ REQUIRED_BEAT_FIELDS = {
     "beat_id", "description", "narrative_function", "status", "assigned_clip_id", "dependencies",
 }
 REQUIRED_CLIP_FIELDS = {
-    "clip_id", "parent_clip_id", "sequence_index", "prompt_version", "generation_mode",
+    "clip_id", "parent_clip_id", "scene_id", "sequence_index", "prompt_version", "generation_mode",
     "status", "narrative_job", "already_happened", "this_clip_only", "reserved_for_later",
     "planned_start_state", "planned_end_state", "observed_start_state", "observed_end_state",
     "continuity_locks", "allowed_changes", "continuity_breaks", "accepted_deviations",
@@ -27,7 +35,7 @@ REQUIRED_CLIP_FIELDS = {
     "extension_depth",
 }
 REQUIRED_CLIP_CONTRACT_FIELDS = {
-    "project_id", "clip_id", "parent_clip_id", "sequence_index", "narrative_job",
+    "project_id", "clip_id", "parent_clip_id", "scene_id", "sequence_index", "narrative_job",
     "target_duration_sec", "generation_mode", "shot_structure", "already_happened",
     "this_clip_only", "reserved_for_later", "planned_start_state", "planned_end_state",
     "continuity_locks", "allowed_changes", "status",
@@ -81,12 +89,66 @@ def validate_project(path: Path, root: Path) -> list[str]:
 
     clip_ids = set()
     accepted_ids = set()
+    scene_ids = set()
+    scene_depth_caps = {}
+    scene_indexes = set()
+    scene_assigned = {}
+    clip_scene = {}
+    scenes = data.get("scenes", [])
+    if not isinstance(scenes, list):
+        errors.append(f"{rel}: scenes must be an array of scene objects")
+        scenes = []
+    for scene in scenes:
+        if not isinstance(scene, dict):
+            errors.append(f"{rel}: scenes entries must be objects")
+            continue
+        check_required(scene, REQUIRED_SCENE_FIELDS, f"{rel}: scene", errors)
+        sid = scene.get("scene_id")
+        if sid in scene_ids:
+            errors.append(f"{rel}: duplicate scene_id {sid}")
+        scene_ids.add(sid)
+        idx = scene.get("scene_index")
+        if not isinstance(idx, int) or isinstance(idx, bool) or idx < 1:
+            errors.append(f"{rel}: scene {sid} scene_index must be an integer >= 1")
+        elif idx in scene_indexes:
+            errors.append(f"{rel}: duplicate scene_index {idx}")
+        else:
+            scene_indexes.add(idx)
+        if scene.get("status") not in SCENE_STATUSES:
+            errors.append(f"{rel}: scene {sid} invalid status {scene.get('status')}")
+        if scene.get("arc_position") not in ARC_POSITIONS:
+            errors.append(f"{rel}: scene {sid} invalid arc_position {scene.get('arc_position')}")
+        depth_cap = scene.get("max_chain_depth")
+        if not isinstance(depth_cap, int) or isinstance(depth_cap, bool) or depth_cap < 0 or depth_cap > MAX_CHAIN_DEPTH_CEILING:
+            errors.append(f"{rel}: scene {sid} max_chain_depth must be an integer between 0 and {MAX_CHAIN_DEPTH_CEILING}")
+        else:
+            scene_depth_caps[sid] = depth_cap
+        assigned_list = scene.get("assigned_clip_ids", [])
+        seen_assigned = set()
+        for assigned in assigned_list if isinstance(assigned_list, list) else []:
+            if assigned in seen_assigned:
+                errors.append(f"{rel}: scene {sid} lists clip {assigned} more than once")
+            seen_assigned.add(assigned)
+        scene_assigned[sid] = seen_assigned
     for clip in data["clips"]:
         check_required(clip, REQUIRED_CLIP_FIELDS, f"{rel}: clip", errors)
         cid = clip.get("clip_id")
         if cid in clip_ids:
             errors.append(f"{rel}: duplicate clip_id {cid}")
         clip_ids.add(cid)
+        sid = clip.get("scene_id")
+        clip_scene[cid] = sid
+        depth = clip.get("extension_depth")
+        if not isinstance(depth, int) or isinstance(depth, bool) or depth < 0:
+            errors.append(f"{rel}: clip {cid} extension_depth must be a non-negative integer")
+            depth = None
+        if sid not in scene_ids:
+            errors.append(f"{rel}: clip {cid} scene {sid} is missing")
+        elif sid in scene_depth_caps and depth is not None and depth > scene_depth_caps[sid]:
+            errors.append(
+                f"{rel}: clip {cid} extension_depth {depth} exceeds "
+                f"scene {sid} max_chain_depth {scene_depth_caps[sid]}; open from canonical references instead"
+            )
         if clip.get("status") in ACCEPTED:
             accepted_ids.add(cid)
             if not clip.get("observed_end_state"):
@@ -116,6 +178,22 @@ def validate_project(path: Path, root: Path) -> list[str]:
         assigned = beat.get("assigned_clip_id")
         if assigned is not None and assigned not in clip_ids:
             errors.append(f"{rel}: beat {beat.get('beat_id')} assigned to missing clip {assigned}")
+
+    assignment_owners = {}
+    for sid, assigned_set in scene_assigned.items():
+        for assigned in assigned_set:
+            if assigned not in clip_ids:
+                errors.append(f"{rel}: scene {sid} assigned to missing clip {assigned}")
+            assignment_owners.setdefault(assigned, []).append(sid)
+    for cid, owners in assignment_owners.items():
+        if len(owners) > 1:
+            errors.append(f"{rel}: clip {cid} is assigned to multiple scenes: {sorted(owners)}")
+    for cid, sid in clip_scene.items():
+        if sid in scene_assigned and cid not in scene_assigned[sid]:
+            errors.append(f"{rel}: clip {cid} carries scene_id {sid} but scene {sid} does not list it in assigned_clip_ids")
+        owners = assignment_owners.get(cid, [])
+        if owners and sid not in owners:
+            errors.append(f"{rel}: clip {cid} carries scene_id {sid} but is listed under scene {owners[0]}")
 
     for ref in data.get("reference_registry", []):
         if not ref.get("preserve_exact_tag"):
