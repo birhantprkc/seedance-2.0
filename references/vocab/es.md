@@ -43,7 +43,7 @@ Use this reference for Spanish Seedance prompt wording, role binding, and compac
 | Audio | `una frase corta y clara` | one short clear spoken line |
 | Audio | `sin música, solo ambiente bajo` | no music, low ambience only |
 | Audio | `cámara fija durante el diálogo` | locked camera during dialogue |
-| Audio | `los pasos caen en el pulso` | footsteps hit the beat |
+| Audio | `los pasos siguen el pulso` | footsteps hit the beat |
 | Text | `sin subtítulos, marcas de agua ni texto adicional` | no subtitles, watermarks, or extra text |
 | Editing | `continuar el plano` | continue the shot |
 | Editing | `extender cinco segundos` | extend by five seconds |
@@ -82,7 +82,7 @@ Consenso de la comunidad: los adjetivos de calidad abstractos desestabilizan la 
 | `hermoso / precioso` | color, textura, material, comportamiento de la luz |
 | `obra maestra / alta calidad / 8K` | eliminar; la calidad no se pide y la resolución es un ajuste |
 | `espectacular` | el momento concreto: qué se mueve, qué se revela |
-| `dramático` | bloqueo, sombra, silencio o presión de cámara |
+| `dramático` | puesta en escena, sombra, silencio o presión de cámara |
 | `mágico` | comportamiento de partículas, fuente del brillo, trayectoria |
 | `de ensueño` (solo) | qué lo hace onírico: `bruma fina, luz volumétrica, flotación lenta` |
 | `dinámico` | el movimiento concreto, su velocidad y su punto final |
