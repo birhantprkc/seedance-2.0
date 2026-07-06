@@ -358,6 +358,12 @@ For manual installation, copy this repository into the skill directory used by y
 | Windsurf workspace | `.windsurf/skills/seedance-20/` |
 | Trae (ByteDance) | `.trae/skills/seedance-20/` |
 | Qwen Code (Alibaba) | `.qwen/skills/seedance-20/` or `~/.qwen/skills/seedance-20/` |
+| OpenCode | `.opencode/skills/seedance-20/` (also reads `.claude/skills/` and `.agents/skills/`) |
+| Amp (Sourcegraph) | `.agents/skills/seedance-20/` or `~/.config/agents/skills/seedance-20/` |
+| Goose (Block) | `.agents/skills/seedance-20/` (also `.goose/skills/seedance-20/`) |
+| Junie (JetBrains) | `.junie/skills/seedance-20/` or `~/.junie/skills/seedance-20/` |
+
+Several of these clients share the `.agents/skills/` convention — Codex, Google Antigravity, OpenCode, Amp, and Goose all read it — so one install under `.agents/skills/seedance-20/` can serve them together, and `.claude/skills/` is read by many as a compatibility path. Install once as the `seedance-20` root skill; its sub-skills and references resolve by relative path.
 
 ## Validation
 
